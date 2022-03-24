@@ -13,6 +13,7 @@ body {
 
 .flex{
   display: flex;
+  flex-wrap: wrap;
 }
 
 .text-center{
@@ -1656,10 +1657,6 @@ div#se-linha-price-before {
   font-size: 33px;
   margin-top: 0px;
   margin-bottom: 0px;
-}
-
-.product-card {
-  padding: 29px 18px 29px 34px;
 }
 
 .product-card-price {
