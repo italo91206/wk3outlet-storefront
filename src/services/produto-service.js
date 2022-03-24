@@ -1,4 +1,4 @@
-import api from '../api/instanceApi';
+import api from './api/instanceApi';
 
 const ProdutoService = {
   listarProdutos: async () => {
