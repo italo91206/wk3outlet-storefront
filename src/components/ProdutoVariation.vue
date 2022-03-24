@@ -6,9 +6,12 @@
       <div class="flex">
         <button
           @click="selecionaCor(cor.cor), selecionaVariacao(cor.variacao_id)"
+          class="variacao-button"
           v-for="cor in cores"
           :key="`${cor.cor}-${cor.variacao_id}`"
-          class="variacao-button"
+          :class="{
+            'selected': cor_selecionada == cor.cor,
+          }"
         >
           <span
             class="variacao-cor"
@@ -23,10 +26,14 @@
 
       <div class="flex">
         <button
-          @click="selecionaVariacao(tamanho.variacao_id)"
+          @click="selecionaTamanho(tamanho.tamanho), selecionaVariacao(tamanho.variacao_id)"
+          class="variacao-button"
           v-for="tamanho in tamanhos"
           :key="`${tamanho.tamanho}-${tamanho.variacao_id}`"
-          class="variacao-button"
+          :class="{
+            'selected': tamanho_selecionado == tamanho.tamanho,
+            'no-stock': getQuantidade(tamanho.variacao_id) == 0
+          }"
         >
           <span class="variacao-tamanho">
             {{ tamanho.tamanho }}
@@ -40,33 +47,30 @@
 <script>
 export default {
   name: "ProdutoVariation",
-  props: ["data"],
+  props: ["variacoes"],
   data() {
     return {
       cores: [],
       tamanhos: [],
+      cor_selecionada: null,
+      tamanho_selecionado: null,
     };
   },
   methods: {
     processaVariacoes() {
-      let data = this.data;
+      let variacoes = this.variacoes;
       let cores_aux = [];
       let tamanhos_aux = [];
 
       // primeira iteração para as cores
-      data.forEach((variacao) => {
+      variacoes.forEach((variacao) => {
         if (variacao.cor) cores_aux.push(variacao);
       });
 
       // segunda iteração para os tamanhos
-      data.forEach((variacao) => {
+      variacoes.forEach((variacao) => {
         if (variacao.tamanho) tamanhos_aux.push(variacao);
       });
-
-      // const uniqueAddresses = Array.from(new Set(addresses.map(a => a.id)))
-      //   .map(id => {
-      //     return addresses.find(a => a.id === id)
-      //   })
 
       this.cores = Array.from(new Set(cores_aux.map((c) => c.cor))).map(
         (cor) => {
@@ -81,21 +85,33 @@ export default {
       });
     },
     selecionaCor(cor) {
-      const resultado = this.data.filter((variacao) => {
+      console.log("cor selecionada:", cor)
+      this.cor_selecionada = cor;
+      const resultado = this.variacoes.filter((variacao) => {
         return variacao.cor == cor;
       });
       this.tamanhos = resultado;
     },
     selecionaTamanho(tamanho) {
-      const resultado = this.data.filter((variacao) => {
+      console.log("tamanho selecionado:", tamanho)
+      this.tamanho_selecionado = tamanho;
+      const resultado = this.variacoes.filter((variacao) => {
         return variacao.tamanho == tamanho;
       });
       return resultado;
       // console.log(resultado);
     },
     selecionaVariacao(id) {
-      this.$emit("selecionarVariacao", id);
+      console.log("variacao selecionada:", id)
+      this.$emit('input', id);
     },
+    getQuantidade(variacao_id){
+      let variacao = this.variacoes.filter((variacao) => {
+        return variacao.variacao_id == variacao_id
+      })
+      console.log("variacao", variacao)
+      return variacao[0].quantidade
+    }
   },
   mounted() {
     this.processaVariacoes();
@@ -110,6 +126,7 @@ export default {
   padding: 2px;
   border: solid 1px grey;
   background: unset;
+  position: relative;
 }
 
 .variacao-tamanho,
@@ -131,5 +148,21 @@ export default {
 
 #variation-options p{
   text-align: left;
+}
+
+.variacao-button.selected {
+  border: solid 2px #ffaa2a;
+}
+
+.variacao-button.no-stock:after {
+    width: 32px;
+    height: 2px;
+    position: absolute;
+    background: #5e6064;
+    z-index: 1;
+    content: '';
+    top: 11px;
+    left: -5px;
+    transform: rotate(45deg);
 }
 </style>

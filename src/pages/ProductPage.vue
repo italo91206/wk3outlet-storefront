@@ -46,14 +46,24 @@
           <div id="product-page--variation-details" class="row">
             <ProdutoVariation
               v-if="produto.variacoes.length > 0"
-              :data="produto.variacoes"
+              :variacoes="produto.variacoes"
+              v-model="activeSku"
             />
           </div>
 
-          <div id="product-page--add-to-cart" class="row">
-            <button id="add-to-cart-button">
+          <div id="product-page--actions" class="row">
+            <button v-if="sku_has_stock" id="add-to-cart-button">
               Adicionar ao carrinho
             </button>
+
+            <ProductNewsLetter
+              v-if="sku_has_stock == false"
+              :sku="activeSku"
+            />
+          </div>
+
+          <div class="row">
+            <p>SKU ativo: {{ activeSku }}</p>
           </div>
         </div>
       </div>
@@ -64,11 +74,13 @@
 <script>
 import service from "@/services/catalogo-service.js";
 import ProdutoVariation from "@/components/ProdutoVariation.vue";
+import ProductNewsLetter from "@/components/ProductNewsLetter.vue"
 
 export default {
   name: "ProductPage",
   components: {
     ProdutoVariation,
+    ProductNewsLetter,
   },
   data() {
     return {
@@ -78,6 +90,9 @@ export default {
       produto: null,
       variacaoSelecionada: null,
       loading: true,
+      activeSku: null,
+      quantity: 1,
+      sku_has_stock: true,
     };
   },
   methods: {
@@ -85,6 +100,10 @@ export default {
       const response = await service.getProduto(url);
       if (response.data.success) {
         this.produto = response.data.data;
+        if(this.produto.variacoes.length == 0){
+          this.activeSku = this.produto.sku
+          this.hasStock(this.activeSku)
+        }
         this.loading = false;
       } else {
         this.$toast.error(response.data.message);
@@ -119,6 +138,18 @@ export default {
       });
       this.variacaoSelecionada = variacao[0];
     },
+    hasStock(activeSku){
+      console.log("activeSKu", activeSku)
+      if(activeSku == this.produto.produto_id){
+        this.sku_has_stock = this.produto.estoque == 0 ? false : true
+      }
+      else{
+        let variacao = this.produto.variacoes.filter((variacao) => {
+          return variacao.variacao_id == activeSku
+        })
+        this.sku_has_stock = variacao[0].quantidade == 0 ? false : true
+      }
+    }
   },
   computed: {
     getImage() {
@@ -135,9 +166,13 @@ export default {
   },
   mounted() {
     const url = this.$route.params.url;
-    console.log(url);
     this.recuperarProduto(url);
   },
+  watch:{
+    activeSku(){
+      this.hasStock(this.activeSku)
+    }
+  }
 };
 </script>
 
