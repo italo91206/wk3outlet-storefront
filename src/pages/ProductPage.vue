@@ -4,49 +4,59 @@
       <h2>Carregando ....</h2>
     </section>
 
-    <section v-else class="container">
-      <div class="container product-image-gallery">
-        <div
-          v-if="produto.imagens.length == 0"
-          class="product-image-gallery--image"
-        >
-          <img
-            src="https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png"
-            class="w100"
-          />
-        </div>
-
-        <div v-else class="product-image-gallery--image">
-          <img
-            v-for="imagem in produto.imagens"
-            :key="imagem.imagem_id"
-            :src="`http://wk3outlet.italoferreira.dev.br/static/${imagem.url}`"
-            :alt="produto.nome"
-            class="w100"
-          />
-        </div>
+    <section class="container" v-if="loading == false">
+      <div id="product-breadcrumbs" class="row">
+        <ul id="product-breadrumbs--ul">
+          <li class="breadcrumb-li"><router-link to="/">Home</router-link></li>
+          <li class="breadcrumb-li">
+            <router-link to="/">{{ produto.categoria }}</router-link>
+          </li>
+          <li class="breadcrumb-li">{{ produto.nome_produto }}</li>
+        </ul>
       </div>
 
-      <p><b>Nome do produto:</b> {{ produto.nome_produto }}</p>
-      <p><b>Preço do produto:</b> {{ produto.preco | preco }}</p>
-      <p><b>Descrição do produto:</b></p>
-      <p>{{ produto.descricao }}</p>
-      <p><b>Modelo:</b> {{ produto.modelo }}</p>
-      <p><b>Marca:</b> {{ produto.marca }}</p>
-      <p><b>Categoria:</b> {{ produto.nome_categoria }}</p>
+      <div class="row flex">
+        <div id="product-images-column" class="col-6">
+          <div class="product-image-gallery">
+            <div class="row product-image-gallery--image w100">
+              <img :src="getImage" alt="" class="w100" />
+            </div>
 
-      <produto-variation
-        :data="produto.variacoes"
-        v-on:selecionarVariacao="selecionarVariacao"
-      >
-      </produto-variation>
+            <div class="row flex product-image-gallery--other-images">
+              <div
+                class="col-4"
+                v-for="(imagem, i) in produto.imagens"
+                :key="i"
+              >
+                <img :src="base_url + imagem.url" alt="" class="w100" />
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <button
-        @click="addToCart"
-        color="success"
-      >
-        Adicionar ao carrinho
-      </button>
+        <div id="product-details-column" class="col-6">
+          <div div="product-page--simple-details" class="row">
+            <p id="product-name">{{ produto.nome_produto }}</p>
+            <p id="product-price">{{ produto.preco | preco }}</p>
+            <p id="product-modelo">Modelo: {{ produto.modelo }}</p>
+            <p id="product-marca">Marca: {{ produto.marca }}</p>
+            <p id="product-categoria">Categoria: {{ produto.categoria }}</p>
+          </div>
+
+          <div id="product-page--variation-details" class="row">
+            <ProdutoVariation
+              v-if="produto.variacoes.length > 0"
+              :data="produto.variacoes"
+            />
+          </div>
+
+          <div id="product-page--add-to-cart" class="row">
+            <button id="add-to-cart-button">
+              Adicionar ao carrinho
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 </template>
@@ -125,20 +135,31 @@ export default {
   },
   mounted() {
     const url = this.$route.params.url;
-    console.log(url)
+    console.log(url);
     this.recuperarProduto(url);
   },
 };
 </script>
 
 <style lang="css">
-.product-image-gallery {
-  overflow: auto;
+#product-breadrumbs--ul {
+  margin-block: unset;
+  margin-inline: unset;
+  padding-inline: unset;
   display: flex;
-  flex-wrap: wrap;
 }
-.product-image-gallery--image {
-  max-width: 300px;
-  max-height: 500px;
+
+.breadcrumb-li {
+  display: block;
+  padding: 1px 10px;
+}
+
+#product-breadrumbs--ul .breadcrumb-li:not(:last-child):after {
+  content: ">";
+  padding: 0px 10px;
+}
+
+#product-page p{
+  text-align: left;
 }
 </style>
