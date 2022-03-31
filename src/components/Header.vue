@@ -8,7 +8,6 @@
       <div id="wk-header--menu">
         <ul class="items-menu flex">
           <li><router-link to="/">Home</router-link></li>
-          <li><a @click="toggleCarrinho">abrir carrinho</a></li>
         </ul>
       </div>
 
@@ -20,32 +19,54 @@
       </div>
 
       <div id="wk-header--options">
-        <span class="fas fa-user"></span>
-        <span class="fas fa-shopping-cart"></span>
+        <router-link to="/minha-conta">
+          <span class="fas fa-user"></span>
+          <span v-if="isLogado">Olá, {{ getNomePerfil }}</span>
+          <span v-else>{{ getNomePerfil }}</span>
+        </router-link>
+
+        <span
+          class="fas fa-shopping-cart"
+          @click="carrinhoToggled = !carrinhoToggled"
+        ></span>
       </div>
     </div>
 
-    <!-- <Carrinho :toggled="carrinhoToggled"/> -->
+    <Carrinho
+      :toggled="carrinhoToggled"
+      v-on:cart-close="carrinhoToggled = false"
+    />
   </header>
 </template>
 
 <script>
-// import Carrinho from '@/components/Loja/Carrinho'
+import Carrinho from '@/components/Carrinho'
 
 export default {
   name: "HeaderComponent",
-  // components: {
-  //   Carrinho
-  // },
+  components: {
+    Carrinho
+  },
   data() {
     return {
       carrinhoToggled: false,
     };
   },
-  methods: {
-    toggleCarrinho() {
-      this.carrinhoToggled = !this.carrinhoToggled;
+  computed: {
+    getNomePerfil(){
+      let perfil = this.$store.getters['perfil/getPerfil']
+      if(perfil == null)
+        return "deslogado"
+      else
+        return perfil.nome;
     },
+    isLogado(){
+      let perfil = this.$store.getters['perfil/getPerfil']
+      // console.log("perfil", perfil )
+      return perfil.nome == null ? false : true
+    },
+  },
+  methods: {
   },
 };
 </script>
@@ -95,5 +116,14 @@ export default {
 
 .items-menu li:last-child {
   margin: unset;
+}
+
+#wk-header--options .fas {
+  font-size: 24px;
+  margin: 0px 6px;
+}
+
+#wk-header--options .fas:hover {
+  cursor: pointer;
 }
 </style>
