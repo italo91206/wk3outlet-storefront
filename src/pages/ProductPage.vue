@@ -59,6 +59,7 @@
             <ProductNewsLetter
               v-if="sku_has_stock == false"
               :sku="activeSku"
+              :produto_id="produto.produto_id"
             />
           </div>
 
