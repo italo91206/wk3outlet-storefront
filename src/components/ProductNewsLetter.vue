@@ -16,19 +16,41 @@
 </template>
 
 <script>
+import service from '@/services/newsletter-service.js'
+
 export default {
   name: 'ProductNewsletter',
-  props: [ 'sku' ],
+  props: [ 'sku', 'produto_id' ],
   data(){
     return {
       email: '',
-      nome: '',
     }
   },
   methods:{
-    cadastrarNewsletter(){
-      console.log("Você apertou para se inscrever: ", this.sku)
+    async cadastrarNewsletter(){
+      let { sku, produto_id, email } = this;
+
+      await service.cadastrarNewsletter(sku, produto_id, email)
+        .then((response) => {
+          if(response.data.success){
+            this.$toast.success("Você se inscreveu na newsletter")
+            this.email = ''
+          }
+          else{
+            this.$toast.error(response.data.message)
+            console.log(response.data)
+          }
+        })
+        .catch((error) => {
+          this.$toast.error("Algo deu errado")
+          console.log(error)
+        })
     }
+  },
+  mounted(){
+    let perfil = { ...this.$store.getters['perfil/getPerfil'] }
+    if(perfil.email != null)
+      this.email = perfil.email
   }
 }
 </script>
