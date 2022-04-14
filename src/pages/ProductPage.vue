@@ -9,7 +9,8 @@
         <ul id="product-breadrumbs--ul">
           <li class="breadcrumb-li"><router-link to="/">Home</router-link></li>
           <li class="breadcrumb-li">
-            <router-link to="/">{{ produto.categoria }}</router-link>
+            <router-link v-if="produto.categoria" to="/">{{ produto.categoria }}</router-link>
+            <router-link v-else to="/">Produtos</router-link>
           </li>
           <li class="breadcrumb-li">{{ produto.nome_produto }}</li>
         </ul>

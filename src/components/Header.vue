@@ -22,7 +22,7 @@
     <div class="wk-container wk-container--principal flex">
       <div id="wk-header--image">
         <router-link to="/">
-          <img src="logo-extenso-invertido.png" alt="" />
+          <img src="/logo-extenso-invertido.png" alt="" />
         </router-link>
       </div>
 
