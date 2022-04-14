@@ -8,6 +8,7 @@ import 'vue-toast-notification/dist/theme-default.css';
 import App from './App.vue'
 import routes from './routes.js'
 
+
 Vue.config.productionTip = false
 
 Vue.use(VueRouter);
