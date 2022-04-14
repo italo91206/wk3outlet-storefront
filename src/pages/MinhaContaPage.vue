@@ -10,36 +10,41 @@
           <div class="col-3">
             <button
               v-bind:class="{ etapaAtivo: etapa == 1 }"
-              class="w100"
+              class="w100 etapa-button"
               @click="etapa = 1"
             >
               Inf. Básicas
             </button>
             <button
               v-bind:class="{ etapaAtivo: etapa == 2 }"
-              class="w100"
+              class="w100 etapa-button"
               @click="etapa = 2"
             >
               Inf. Avançadas
             </button>
             <button
               v-bind:class="{ etapaAtivo: etapa == 3 }"
-              class="w100"
+              class="w100 etapa-button"
               @click="etapa = 3"
             >
               Compras
             </button>
             <button
               v-bind:class="{ etapaAtivo: etapa == 4 }"
-              class="w100"
+              class="w100 etapa-button"
               @click="(etapa = 4), carregarNewsletter()"
             >
               Newsletter
             </button>
-            <button class="w100" @click="logoff">Sair</button>
+            <button
+              class="w100 etapa-button etapa-button--logoff"
+              @click="logoff"
+            >
+              Sair
+            </button>
           </div>
 
-          <div class="col-5 m-0-auto">
+          <div class="col-9 m-0-auto">
             <div v-if="etapa == 1" class="w100">
               <div class="form-group">
                 <label for="">Nome</label>
@@ -64,29 +69,24 @@
                 />
               </div>
 
-              <div class="form-group">
-                <label for="">Tipo de perfil</label>
-                <div class="row flex">
-                  <div class="form-group flex">
-                    <input
-                      type="radio"
-                      v-model="perfil.isCompany"
-                      value="false"
-                      :disabled="disabled"
-                    />
-                    <label for="">Pessoa Física</label>
-                  </div>
+              <div class="form-group form-group--radio">
+                <input
+                  type="radio"
+                  v-model="perfil.isCompany"
+                  value="false"
+                  :disabled="disabled"
+                />
+                <label for="">Pessoa Física</label>
+              </div>
 
-                  <div class="form-group flex">
-                    <input
-                      type="radio"
-                      v-model="perfil.isCompany"
-                      value="true"
-                      :disabled="disabled"
-                    />
-                    <label for="">Pessoa Jurídica</label>
-                  </div>
-                </div>
+              <div class="form-group form-group--radio">
+                <input
+                  type="radio"
+                  v-model="perfil.isCompany"
+                  value="true"
+                  :disabled="disabled"
+                />
+                <label for="">Pessoa Jurídica</label>
               </div>
             </div>
 
@@ -327,10 +327,48 @@ export default {
 #minha-conta-page .form-group {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  text-align: left;
+  margin-bottom: 15px;
 }
 
 #minha-conta-page table td {
   border: solid 1px #d7d7d7;
   padding: 6px;
+}
+
+#minha-conta-page .form-group--radio {
+  justify-content: unset;
+}
+
+#minha-conta-page .form-group--radio input {
+  width: unset;
+  margin-right: 15px;
+  margin-left: unset;
+}
+
+.etapa-button {
+  padding: 9px 10px;
+  margin-bottom: 10px;
+  border: solid 1px grey;
+  border-radius: 2px;
+  color: #2c3e50;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.etapa-button.etapaAtivo {
+  background: #2c3e50;
+  color: #fff;
+}
+
+.etapa-button:hover {
+  cursor: pointer;
+}
+
+.etapa-button--logoff {
+  background: #c70000;
+  color: #fff;
+  border: unset;
 }
 </style>

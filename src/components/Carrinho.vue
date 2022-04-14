@@ -105,7 +105,7 @@ export default {
 
 <style lang="css">
 #wk-carrinho {
-  position: absolute;
+  position: fixed;
   right: 0px;
   width: 425px;
   height: 100%;

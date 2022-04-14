@@ -1,9 +1,9 @@
 <template>
   <section class="product-listing">
     <router-link
-      class="product-router-link"
       v-for="produto in produtos"
       :key="produto.id"
+      class="product-router-link"
       :to="`/p/${produto.sku}`"
     >
       <ProductCard :produto="produto"/>
@@ -18,11 +18,12 @@ import service from "@/services/catalogo-service.js";
 export default {
   name: "ProductSearch",
   components: {
-    ProductCard
+    ProductCard,
   },
   data() {
     return {
-      produtos: []
+      produtos: [],
+      swiper: {},
     };
   },
   methods: {
