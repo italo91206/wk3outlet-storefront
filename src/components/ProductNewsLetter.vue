@@ -30,21 +30,26 @@ export default {
     async cadastrarNewsletter(){
       let { sku, produto_id, email } = this;
 
-      await service.cadastrarNewsletter(sku, produto_id, email)
-        .then((response) => {
-          if(response.data.success){
-            this.$toast.success("Você se inscreveu na newsletter")
-            this.email = ''
-          }
-          else{
-            this.$toast.error(response.data.message)
-            console.log(response.data)
-          }
-        })
-        .catch((error) => {
-          this.$toast.error("Algo deu errado")
-          console.log(error)
-        })
+      if(email == ''){
+        this.$toast.error("Digite um e-mail válido")
+      }
+      else{
+        await service.cadastrarNewsletter(sku, produto_id, email)
+          .then((response) => {
+            if(response.data.success){
+              this.$toast.success("Você se inscreveu na newsletter")
+              this.email = ''
+            }
+            else{
+              this.$toast.error(response.data.message)
+              console.log(response.data)
+            }
+          })
+          .catch((error) => {
+            this.$toast.error("Algo deu errado")
+            console.log(error)
+          })
+      }
     }
   },
   mounted(){
