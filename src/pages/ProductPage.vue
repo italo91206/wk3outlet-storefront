@@ -142,7 +142,7 @@ export default {
     },
     hasStock(activeSku){
       console.log("activeSKu", activeSku)
-      if(activeSku == this.produto.produto_id){
+      if(activeSku == this.produto.sku){
         this.sku_has_stock = this.produto.estoque == 0 ? false : true
       }
       else{

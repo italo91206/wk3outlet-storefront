@@ -285,7 +285,7 @@ export default {
 }
 
 #entrar-page .entrar-page--login {
-  padding: 10vw;
+  padding: 5vw;
 }
 
 .form-group--radio input {
