@@ -3,6 +3,7 @@ import Product from '@/pages/ProductPage.vue'
 import Search from '@/pages/SearchPage.vue'
 import MinhaContaPage from '@/pages/MinhaContaPage.vue'
 import EntrarPage from '@/pages/EntrarPage.vue'
+import CheckoutPage from '@/pages/CheckoutPage.vue'
 
 const routes = [
   {
@@ -27,6 +28,15 @@ const routes = [
     path: '/entrar',
     component: EntrarPage,
     name: 'Entre ou cadastre-se',
+    meta: {
+      title: 'WK3 Outlet',
+      layout: 'AppLayoutDefault'
+    }
+  },
+  {
+    path: '/checkout',
+    component: CheckoutPage,
+    name: 'Checkout',
     meta: {
       title: 'WK3 Outlet',
       layout: 'AppLayoutDefault'
