@@ -39,7 +39,7 @@ const routes = [
     name: 'Checkout',
     meta: {
       title: 'WK3 Outlet',
-      layout: 'AppLayoutDefault'
+      layout: 'AppLayoutNone'
     }
   },
   {
