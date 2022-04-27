@@ -53,7 +53,7 @@
           </div>
 
           <div id="product-page--actions" class="row">
-            <button v-if="sku_has_stock" id="add-to-cart-button">
+            <button v-if="sku_has_stock" @click="addToCart" id="add-to-cart-button">
               Adicionar ao carrinho
             </button>
 
@@ -114,17 +114,21 @@ export default {
     },
     addToCart() {
       let possui_variacoes = this.verificaVariacao();
+      let { activeSku, produto } = this
+      const product_to_add = { ...produto }
 
       if (possui_variacoes) {
-        if (this.variacaoSelecionada == null)
+        if (activeSku == null)
           this.$toast.error("Selecione uma variação");
         else {
-          this.produto.variacao = this.variacaoSelecionada;
-          this.$store.dispatch("carrinho/adicionarProduto", this.produto);
+
+          delete product_to_add.variacoes;
+          product_to_add.variacao = this.selecionarVariacao(activeSku)
+          this.$store.dispatch("carrinho/adicionarProduto", { product_to_add });
         }
       } else {
         this.variacaoSelecionada = this.produto;
-        this.$store.dispatch("carrinho/adicionarProduto", this.produto);
+        this.$store.dispatch("carrinho/adicionarProduto", { product_to_add });
       }
     },
     verificaVariacao() {
@@ -132,13 +136,10 @@ export default {
       else return true;
     },
     selecionarVariacao(id) {
-      // console.log(this.produto.variacoes)
-      // console.log(id);
-      // this.variacaoSelecionada = id;
       let variacao = this.produto.variacoes.filter((item) => {
         return item.variacao_id === id;
       });
-      this.variacaoSelecionada = variacao[0];
+      return variacao[0];
     },
     hasStock(activeSku){
       console.log("activeSKu", activeSku)
