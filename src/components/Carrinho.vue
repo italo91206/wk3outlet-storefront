@@ -1,9 +1,6 @@
 <template>
-  <aside id="wk-carrinho" :class="{'ativo': toggled}">
-
-    <button id="cart-close-button"
-      @click="closeCart"
-    >
+  <aside id="wk-carrinho" :class="{ ativo: toggled }">
+    <button id="cart-close-button" @click="closeCart">
       <span class="fas fa-times"></span>
     </button>
 
@@ -24,43 +21,58 @@
             {{ produto.nome_produto }}
           </span>
 
-          <span
-            v-if="produto.variacao.cor"
+          <div
+            v-if="produto.variacao"
             class="wk-carrinho--produto-variation-span"
           >
-            {{ produto.variacao.cor }}
-          </span>
-
-          <span
-            v-if="produto.variacao.tamanho"
-            class="wk-carrinho--produto-variation-span"
-          >
-            {{ produto.variacao.tamanho }}
-          </span>
+            <span
+              class="wk-carrinho--produto-variation-span--cor"
+              :style="`background-color: ${produto.variacao.hexa}`"
+            >
+            </span>
+            <span class="wk-carrinho--produto-variation-span--tamanho">
+              {{ produto.variacao.tamanho }}
+            </span>
+          </div>
 
           <span class="w100 wk-carrinho--produto-preco">
-            {{ produto.preco }}
+            {{ produto.preco | preco }}
           </span>
 
           <span class="w100 wk-carrinho--produto-quantidade">
-            Quantidade: 1
+            <button @click="changeProductQuantity('+', produto.produto_id)">
+              <span class="fas fa-plus"></span>
+            </button>
+
+            <span>{{ produto.quantidade }}</span>
+
+            <button @click="changeProductQuantity('-', produto.produto_id)">
+              <span class="fas fa-minus"></span>
+            </button>
           </span>
         </div>
 
-        <v-btn
+        <button
           @click="removerProduto(produto)"
           class="wk-carrinho--produto-remover"
         >
-          <v-icon size="10">fas fa-trash-alt</v-icon>
-        </v-btn>
+          <span class="fas fa-trash-alt"></span>
+        </button>
       </li>
     </ul>
 
-    <span> Total {{ total }} </span>
+    <section id="wk-carrinho--bottom">
+      <div class="wk-carrinho--wrapper">
+        <div class="wk-carrinho--row">
+          <p>Total</p>
+          <b>{{ getTotalCarrinho | preco }}</b>
+        </div>
 
-    <router-link to="/" disabled>
-      <button> Checkout </button>
-    </router-link>
+        <router-link to="/checkout" :disabled="produtos.length == 0 ? true : false">
+          <button id="wk-carrinho--checkout-button">Finalizar compra</button>
+        </router-link>
+      </div>
+    </section>
   </aside>
 </template>
 
@@ -70,35 +82,46 @@ export default {
   props: ["toggled"],
   data() {
     return {
+      fallback_url:
+        "https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png",
+      base_url: "http://wk3outlet.italoferreira.dev.br/static/",
       produtos: [],
-      total: 0.00,
-      fallback_url: 'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png',
-      base_url: 'http://wk3outlet.italoferreira.dev.br/static/'
     };
   },
   methods: {
     removerProduto(produto) {
       this.$store.dispatch("carrinho/removerProduto", produto);
     },
-    closeCart(){
-      console.log("CarrinhoComponent emited: close")
-      this.$emit('cart-close')
-    }
-  },
-  computed: {
-    getImage(produto){
+    closeCart() {
+      console.log("CarrinhoComponent emited: close");
+      this.$emit("cart-close");
+    },
+    getImage(produto) {
       let { fallback_url, base_url } = this;
 
-      if(produto.imagens.length == 0)
-        return fallback_url;
-      else
-        return base_url + produto.imagens[0].url
-    }
+      if (produto.imagens.length == 0) return fallback_url;
+      else return base_url + produto.imagens[0].url;
+    },
+    changeProductQuantity(option, produto_id) {
+      this.produtos = [];
+      if (option === "+")
+        this.$store.commit("carrinho/incrementar", produto_id);
+      else this.$store.commit("carrinho/decrementar", produto_id);
+      this.produtos = this.$store.getters["carrinho/getCarrinho"];
+    },
+  },
+  mounted() {
+    this.produtos = this.$store.getters["carrinho/getCarrinho"];
+  },
+  computed: {
+    getTotalCarrinho() {
+      return this.$store.getters["carrinho/getValorTotal"];
+    },
   },
   filters: {
-    // preco: function (value) {
-    //   return `R$ ${value.toFixed(2)}`;
-    // },
+    preco: function (value) {
+      return `R$ ${value.toFixed(2)}`;
+    },
   },
 };
 </script>
@@ -130,11 +153,25 @@ export default {
 }
 
 .wk-carrinho--produto-variation-span {
-  background-color: #b9b9b9;
-  color: #fff;
-  border-radius: 5px;
-  padding: 1px 3px;
-  margin-right: 10px;
+  display: flex;
+}
+
+.wk-carrinho--produto-variation-span--cor {
+  height: 4px;
+  width: 4px;
+  display: block;
+  margin: unset;
+}
+
+.wk-carrinho--produto-variation-span span {
+  height: 15px;
+  width: 15px;
+  margin: 5px;
+  border: solid 1px grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: unset;
 }
 
 .wk-carrinho--produto-item {
@@ -145,6 +182,7 @@ export default {
   border-bottom: solid 1px grey;
   margin: 0 15px;
   position: relative;
+  justify-content: space-between;
 }
 
 #wk-carrinho--lista-produtos {
@@ -158,6 +196,7 @@ export default {
   flex-wrap: wrap;
   /* justify-content: space-around; */
   flex: 0 0 80%;
+  text-align: left;
 }
 
 .wk-carrinho--produto-nome {
@@ -167,19 +206,70 @@ export default {
 .wk-carrinho--produto-remover {
   position: absolute;
   right: 15px;
-  top: 15px;
+  top: 5px;
+  font-size: 15px;
+  border: unset;
+  background: unset;
 }
 
-.wk-carrinho--produto-remover {
+#cart-close-button {
   position: absolute;
-  right: 15px;
-  top: 0px;
-  border-radius: 100%;
-  font-size: 4px !important;
-  padding: unset !important;
-  width: 40px !important;
-  height: 40px !important;
-  min-width: unset !important;
-  min-height: unset !important;
+  left: 15px;
+  top: 15px;
+  background: unset;
+  border: unset;
+  font-size: 20px;
+  color: #2c3e50;
+}
+
+.wk-carrinho--produto-preco {
+  font-weight: bold;
+  font-size: 13px;
+  margin: 5px 0;
+}
+
+.wk-carrinho--produto-quantidade button {
+  border: unset;
+  background: unset;
+  margin: 4px 3px;
+  color: #1a1a1a;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.wk-carrinho--produto-quantidade {
+  border: solid 1px grey;
+  width: unset;
+}
+
+#wk-carrinho--bottom {
+  position: absolute;
+  bottom: 0px;
+  border-top: solid 1px grey;
+  width: 100%;
+}
+
+.wk-carrinho--wrapper {
+  padding: 15px;
+}
+
+.wk-carrinho--row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.wk-carrinho--row p {
+  margin: unset;
+}
+
+#wk-carrinho--checkout-button {
+  width: 100%;
+  padding: 12px 24px;
+  background: #2c3e50;
+  border: unset;
+  color: #fff;
+  margin-top: 35px;
+  font-weight: bold;
+  font-size: 20px;
 }
 </style>
