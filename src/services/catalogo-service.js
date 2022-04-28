@@ -13,7 +13,19 @@ const CatalogoService = {
     catch (err) {
       console.log(err);
     }
-  }
+  },
+  getCupom: async (codigo) => {
+    let dados;
+    try {
+      dados = await api.get(`/catalogo/cupom/${codigo}`, {
+        params: { codigo: codigo }
+      });
+      return dados;
+    }
+    catch (err) {
+      console.log(err.message);
+    }
+  },
 }
 
 export default CatalogoService
