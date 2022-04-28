@@ -1,9 +1,12 @@
 import api from './api/instanceApi';
 
 const CheckoutService = {
-  realizarPagamento: async(data) => {
+  realizarPagamento: async(produtos, codigo_cupom) => {
     try {
-      const response = await api.post('/checkout/pagar', data);
+      const response = await api.post('/checkout/pagar', {
+        produtos: produtos,
+        codigo_cupom: codigo_cupom
+      });
       return response;
     }
     catch(error){
