@@ -8,20 +8,29 @@ body {
   overflow-x: hidden;
 }
 
-.w100{
+.w100 {
   width: 100%;
 }
 
-.flex{
+.flex {
   display: flex;
   flex-wrap: wrap;
 }
 
-.text-center{
+.text-center {
   text-align: center;
 }
 
-.container{
+.text-left {
+  text-align: left;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.container {
   max-width: 1240px;
   width: 100%;
   margin: 0 auto;
@@ -51,11 +60,16 @@ body {
   background: #e2e2e2;
 }
 
-*, *:focus {
+*,
+*:focus {
   outline: none;
 }
 
-a, a:active, a:hover, a:visited, a:focus {
+a,
+a:active,
+a:hover,
+a:visited,
+a:focus {
   color: inherit;
   text-decoration: none;
   cursor: pointer;
@@ -77,6 +91,10 @@ a, a:active, a:hover, a:visited, a:focus {
   flex: 0 0 15%;
 }
 
+.col-8 {
+  flex: 0 0 75%;
+}
+
 .col-9 {
   flex: 0 0 60%;
 }
@@ -90,11 +108,15 @@ a, a:active, a:hover, a:visited, a:focus {
   pointer-events: none;
 }
 
+.align-center {
+  align-items: center;
+}
+
 .relative {
   position: relative;
 }
 
-.m-0-auto{
+.m-0-auto {
   margin: 0 auto;
 }
 
@@ -114,6 +136,6 @@ a, a:active, a:hover, a:visited, a:focus {
   transition: all .125s ease;
 }
 
-.space-between{
+.space-between {
   justify-content: space-between;
 }
