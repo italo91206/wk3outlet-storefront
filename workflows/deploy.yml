@@ -1,0 +1,23 @@
+name: deploy-frontend-to-server
+on: [push]
+branchs:
+  - master
+jobs:
+  check-bats-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+      - name: Deploy para o hosting
+        uses: easingthemes/ssh-deploy@main
+      - env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          SOURCE: "src/"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrest.REMOTE_USER }}
+          REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}
+      - name: Installing project dependecies
+        run: npm install
+      - name: Building the project
+        run: npm run build
