@@ -18,7 +18,7 @@ const CatalogoService = {
     let dados;
     try {
       dados = await api.get(`/catalogo/cupom/${codigo}`, {
-        params: { codigo: codigo }
+        params: { codigo: codigo || '' }
       });
       return dados;
     }
