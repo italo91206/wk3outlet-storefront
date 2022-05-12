@@ -24,7 +24,7 @@ export const carrinho = {
     getValorTotal(state){
       let total = 0;
       state.carrinho.forEach((produto) => {
-        total += produto.preco
+        total += produto.preco * produto.quantidade
       })
       return total;
     }
