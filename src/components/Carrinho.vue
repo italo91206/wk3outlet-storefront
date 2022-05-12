@@ -137,7 +137,7 @@ export default {
   top: 0;
   transform: translateX(100%);
   transition: transform 0.2s ease;
-  z-index: 1;
+  z-index: 2;
 }
 
 #wk-carrinho.ativo {
@@ -245,8 +245,9 @@ export default {
 #wk-carrinho--bottom {
   position: absolute;
   bottom: 0px;
-  border-top: solid 1px grey;
+  /* border-top: solid 1px grey; */
   width: 100%;
+  background: #d9d9d9;
 }
 
 .wk-carrinho--wrapper {

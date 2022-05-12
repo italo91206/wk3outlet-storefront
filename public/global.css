@@ -25,6 +25,10 @@ body {
   text-align: left;
 }
 
+.text-right {
+  text-align: right;
+}
+
 .disabled {
   opacity: 0.5;
   pointer-events: none;
@@ -138,4 +142,8 @@ a:focus {
 
 .space-between {
   justify-content: space-between;
+}
+
+a button {
+  cursor: pointer;
 }
