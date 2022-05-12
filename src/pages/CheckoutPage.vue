@@ -11,7 +11,11 @@
             <th>Total</th>
             <th></th>
           </tr>
-          <tr v-for="produto in produtos" :key="produto.produto_id">
+          <tr
+            v-for="produto in produtos"
+            :key="produto.produto_id"
+            class="checkout--product-row"
+          >
             <td class="checkout--product-info">
               <img :src="getImage(produto)" alt="" class="w100" />
               <p class="checkout--product-name">
@@ -48,7 +52,7 @@
         </table>
       </section>
 
-      <section class="container">
+      <section id="checkout-bottom" class="container">
         <div class="row flex">
           <div class="col-8 text-left">
             <p>Opção de frete</p>
@@ -73,11 +77,18 @@
                   placeholder="Código do cupom..."
                   v-model="codigo_cupom"
                 />
-                <button @click="buscarCupom">Aplicar</button>
+                <button
+                  id="checkout-cupom-button"
+                  class="w100"
+                  @click="buscarCupom"
+                  :disabled="codigo_cupom == ''"
+                >
+                  Aplicar
+                </button>
               </div>
             </section>
 
-            <section>
+            <section id="checkout-values-description">
               <div class="row flex align-center space-between">
                 <p>Subtotal</p>
                 <b>{{ getSubTotal | preco }}</b>
@@ -97,21 +108,33 @@
         </div>
       </section>
 
-      <div class="container">
-        <button @click="realizarPagamento">
-          Finalizar compra
-        </button>
-
+      <div id="checkout-actions" class="container text-right flex">
         <router-link to="/">
-          <button>Voltar</button>
+          <button class="voltar">Voltar</button>
+        </router-link>
+
+        <router-link to="">
+          <button @click="realizarPagamento">Finalizar compra</button>
         </router-link>
       </div>
     </div>
 
-    <div v-if="etapa == 2">
-      Seremos notificados assim que o pagamento for confirmado.
-      Entraremos em contato quando isso acontecer, ou caso prefira,
-      você sempre pode falar conosco.
+    <div id="checkout-success" v-if="etapa == 2">
+      <div class="fas fa-check-circle"></div>
+      <h2>Ordem de pagamento efetuado</h2>
+      <p class="checkout-order-number">Anote o seu pedido: #{{ id_venda }}</p>
+      <p>
+        Seremos notificados assim que recebermos a confirmação do pagamento.<br/>
+        Te avisaremos por e-mail sobre o status da sua compra.
+      </p>
+
+      <router-link to="/" class="back">
+        <button>Voltar à loja</button>
+      </router-link>
+
+      <a target="_blank" :href="url">
+        <button>Realizar pagamento</button>
+      </a>
     </div>
   </main>
 </template>
@@ -135,6 +158,7 @@ export default {
       codigo_cupom: "",
       cupom: {},
       desconto_geral: 0,
+      id_venda: null,
     };
   },
   computed: {
@@ -160,22 +184,22 @@ export default {
       let { cupom } = this;
       let { getSubTotal } = this;
 
+      if (cupom.codigo == null) return;
+      if (cupom.is_enabled == false || new Date(cupom.validade) < new Date())
+        return this.$toast.error("Este cupom não é mais válido");
       if (cupom.is_percent)
         this.desconto_geral = Math.abs(getSubTotal * (cupom.valor / 100 - 1));
-      else
-        this.desconto_geral = cupom.valor;
+      else this.desconto_geral = cupom.valor;
     },
     async buscarCupom() {
       await catalogo_service
         .getCupom(this.codigo_cupom)
         .then((response) => {
           if (response.data.success) {
-            this.$toast.success("Cupom aplicado com sucesso");
             this.cupom = response.data.data;
             this.aplicarCupom();
-          }
-          else{
-            this.$toast.error(response.data.message)
+          } else {
+            this.$toast.error(response.data.message);
             this.cupom = {};
             this.desconto_geral = 0;
           }
@@ -183,27 +207,31 @@ export default {
         .catch((error) => {
           console.log(error);
           this.$toast.error("Algo deu errado");
-        })
+        });
     },
     async realizarPagamento() {
       this.loading = true;
-      let codigo_cupom = this.cupom.codigo || null
+      let codigo_cupom = this.cupom.codigo || null;
 
-      await checkout_service.realizarPagamento(this.produtos, codigo_cupom)
+      await checkout_service
+        .realizarPagamento(this.produtos, codigo_cupom)
         .then((response) => {
           if (response.data.success) {
-            this.link = response.data.data;
+            this.link = response.data.url;
+            this.id_venda = response.data.id_venda
             this.etapa = 2;
-            window.open(this.link, '_blank').focus();
+            window.open(this.link, "_blank").focus();
           } else {
             this.$toast.error(response.data.message);
           }
         })
         .catch((error) => {
-          console.log(error)
-          this.$toast.error("Algo deu errado.")
+          console.log(error);
+          this.$toast.error("Algo deu errado.");
         })
-        .finally(() => { this.loading = false; })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     removerProduto(produto) {
       this.$store.dispatch("carrinho/removerProduto", produto);
@@ -247,6 +275,7 @@ export default {
 
 .checkout--product-info img {
   width: 45px;
+  margin-right: 20px;
 }
 
 #checkout--product-table th {
@@ -269,4 +298,108 @@ export default {
   border-radius: 4px;
   margin: 0px 3px;
 }
+
+.checkout--product-quantity button {
+  background: unset;
+  border: solid 1px;
+  border-radius: 1px;
+  height: 25px;
+  width: 25px;
+  align-items: center;
+  justify-content: space-around;
+  padding: unset;
+  border-color: #a5a5a5;
+  cursor: pointer;
+}
+
+.checkout--product-quantity span {
+  padding: 2px 8px;
+  background: whitesmoke;
+  margin: 0 5px;
+  border: solid 1px whitesmoke;
+}
+
+#checkout-bottom > div {
+    padding: 20px;
+}
+
+#checkout-bottom {
+  background: whitesmoke;
+  margin-top: 30px;
+}
+
+#checkout-values-description p {
+  margin: 3px 0px;
+}
+
+#checkout-values-description {
+  margin-top: 20px;
+}
+
+#checkout .form-group input[type="text"] {
+    width: calc(100% - 20px);
+    margin-bottom: 10px;
+}
+
+#checkout-success {
+    padding: 10vw;
+}
+
+#checkout-cupom-button {
+    padding: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    background: #2c3e50;
+    color: #fff;
+}
+
+#checkout-actions.container {
+    justify-content: space-between;
+}
+
+#checkout-actions button {
+    padding: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    background: #2c3e50;
+    color: #fff;
+    margin-top: 10px;
+}
+
+#checkout-actions button.voltar {
+
+    background: unset;
+    color: #2c3e50;
+    border: solid 1px;
+}
+
+#checkout-success .fas {
+    font-size: 100px;
+}
+
+.checkout-order-number {
+    font-size: 14px;
+    color: grey;
+}
+
+#checkout-success button {
+    padding: 15px 12px;
+    background: #2c3e50;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-top: 30px;
+}
+
+#checkout-success .back {
+    margin-right: 10px;
+}
+
+#checkout-success .back button {
+    background: unset;
+    color: #2c3e50;
+}
+
+
 </style>
