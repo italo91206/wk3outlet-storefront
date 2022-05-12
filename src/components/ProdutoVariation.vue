@@ -78,6 +78,9 @@ export default {
         }
       );
 
+      if(this.cores.length > 0)
+        this.cor_selecionada = this.cores[0].cor
+
       this.tamanhos = Array.from(
         new Set(tamanhos_aux.map((t) => t.tamanho))
       ).map((tamanho) => {
