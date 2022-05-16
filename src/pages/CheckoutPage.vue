@@ -132,7 +132,7 @@
         <button>Voltar à loja</button>
       </router-link>
 
-      <a target="_blank" :href="url">
+      <a target="_blank" :href="link">
         <button>Realizar pagamento</button>
       </a>
     </div>
@@ -217,8 +217,9 @@ export default {
         .realizarPagamento(this.produtos, codigo_cupom)
         .then((response) => {
           if (response.data.success) {
-            this.link = response.data.url;
-            this.id_venda = response.data.id_venda
+            console.log(response.data.data)
+            this.link = response.data.data.url;
+            this.id_venda = response.data.data.id_venda
             this.etapa = 2;
             window.open(this.link, "_blank").focus();
           } else {
