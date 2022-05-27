@@ -53,7 +53,7 @@
       </div>
 
       <div class="row flex">
-        <form @submit.prevent="cadastro" class="col-4 m-0-auto">
+        <form @submit.prevent="cadastrar" class="col-4 m-0-auto">
           <div class="form-group">
             <label for="">Nome</label>
             <input

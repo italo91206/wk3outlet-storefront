@@ -73,7 +73,7 @@
                 <input
                   type="radio"
                   v-model="perfil.isCompany"
-                  value="false"
+                  :value="false"
                   :disabled="disabled"
                 />
                 <label for="">Pessoa Física</label>
@@ -83,7 +83,7 @@
                 <input
                   type="radio"
                   v-model="perfil.isCompany"
-                  value="true"
+                  :value="true"
                   :disabled="disabled"
                 />
                 <label for="">Pessoa Jurídica</label>
@@ -235,9 +235,6 @@ export default {
     },
   },
   methods: {
-    getNomePerfil() {
-      return this.perfil.nome;
-    },
     logoff() {
       localStorage.removeItem("user");
       this.$store.commit("perfil/unsetPerfil");
@@ -311,14 +308,14 @@ export default {
     },
   },
   mounted() {
-    console.log("isValidAccount", this.isValidAccount);
-
     if (!this.isValidAccount) {
       this.$router.push("/entrar");
     } else {
       this.perfil = { ...this.$store.getters["perfil/getPerfil"] };
       this.old_name = this.perfil.nome;
+      console.log("perfil", this.perfil)
     }
+
   },
 };
 </script>
