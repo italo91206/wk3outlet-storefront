@@ -27,13 +27,19 @@
           <div class="row flex">
             <div id="product-image-thumbs" class="swiper">
               <div class="swiper-wrapper">
-                <div
-                  class="swiper-slide"
-                  v-for="(imagem, i) in produto.imagens"
-                  :key="i"
-                >
-                  <img :src="base_url + imagem.url" alt="" class="w100" />
-                </div>
+                <template v-if="produto.imagens.length">
+                  <div
+                    class="swiper-slide"
+                    v-for="(imagem, i) in produto.imagens"
+                    :key="i"
+                  >
+                    <img :src="base_url + imagem.url" alt="" class="w100" />
+                  </div>
+                </template>
+
+                <template v-else>
+                  <img :src="fallback_url" alt="" class="w100" />
+                </template>
               </div>
             </div>
 
@@ -102,8 +108,11 @@
     </section>
 
     <section id="related-products" class="container" v-if="loading == false">
-      <h3>Produtos da mesma categoria</h3>
-      <ProductSearch />
+      <h3>Ver mais em {{ produto.nome_categoria }}</h3>
+      <ProductSearch
+        :search_type="'category'"
+        :search_id="produto.categoria_id"
+      />
     </section>
   </main>
 </template>
@@ -125,7 +134,7 @@ export default {
     return {
       fallback_url:
         "https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png",
-      base_url: "http://wk3outlet.italoferreira.dev.br/static/",
+      base_url: "http://wk3outlet.com.br/static/",
       produto: null,
       variacaoSelecionada: null,
       loading: true,
