@@ -21,6 +21,11 @@ import service from "@/services/catalogo-service.js";
 
 export default {
   name: "ProductSearch",
+  props: {
+    search_type: String,
+    search_id: Number,
+    search_query: String
+  },
   components: {
     ProductCard,
   },
@@ -33,8 +38,11 @@ export default {
   },
   methods: {
     async listarProdutos() {
+      let {search_type, search_id, search_query} = this
+      // console.log({search_type, search_id, search_query})
+
       await service
-        .listarProdutos()
+        .listarProdutos({search_type, search_id, search_query})
         .then((response) => {
           if (response.data.success) this.produtos = response.data.data;
           else this.$toast.error(response.data.message);

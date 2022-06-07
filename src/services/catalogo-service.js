@@ -1,8 +1,10 @@
 import api from './api/instanceApi';
 
 const CatalogoService = {
-  listarProdutos: async () => {
-    const response = await api.get('/catalogo/produtos');
+  listarProdutos: async (props) => {
+    const response = await api.get('/catalogo/produtos', {
+      params: {...props}
+    });
     return response;
   },
   getProduto: async (url) => {
