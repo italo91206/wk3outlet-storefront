@@ -1,6 +1,6 @@
 <template>
   <section class="product-listing">
-    <div class="swiper">
+    <div :id="`swiper-container--${name}`" class="swiper-container">
       <div class="swiper-wrapper">
         <router-link
           v-for="produto in produtos"
@@ -11,6 +11,18 @@
           <ProductCard :produto="produto" />
         </router-link>
       </div>
+
+      <div class="swiper-navigation">
+        <a class="swiper-navigation--prev">
+          <i class="fas fa-chevron-left"></i>
+        </a>
+
+        <a class="swiper-navigation--next">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      </div>
+
+      <div class="swiper-pagination"></div>
     </div>
   </section>
 </template>
@@ -18,13 +30,15 @@
 <script>
 import ProductCard from "@/components/ProductCard.vue";
 import service from "@/services/catalogo-service.js";
+import Swiper, { Navigation, Pagination } from 'swiper'
 
 export default {
   name: "ProductSearch",
   props: {
     search_type: String,
     search_id: Number,
-    search_query: String
+    search_query: String,
+    name: String
   },
   components: {
     ProductCard,
@@ -56,27 +70,24 @@ export default {
         });
     },
   },
-  mounted() {
-    let script = document.createElement("script");
-    script.setAttribute(
-      "src",
-      "https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.1.0/swiper-bundle.min.js"
-    );
-    script.setAttribute("crossorigin", "anonymous");
-    script.setAttribute("referrerpolicy", "no-referrer");
-    script.setAttribute(
-      "integrity",
-      "sha512-uz9KhDW9ZdiJU79RDPNuHE4Z9aUOYTVargiMzYbe8Z3j5vBHxBMmlvGw1Xa09CmV6tCUOhGazG4pTWsuDJd1xw=="
-    );
-    script.onload = () => {
-      // eslint-disable-next-line
-      new Swiper(".swiper", {
-        slidesPerView: 'auto',
+  async mounted() {
+    await this.listarProdutos().then(() => {
+      const class_id = `#swiper-container--${this.name}`
+      new Swiper(class_id, {
+        modules: [Navigation, Pagination],
+        slidesPerView: 5,
         spaceBetween: 10,
-      });
-    };
-    document.body.appendChild(script);
-    this.listarProdutos();
+        loop: true,
+        navigation: {
+          nextEl: '.swiper-navigation--prev',
+          prevEl: '.swiper-navigation--next'
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          type: 'bullets',
+        },
+      })
+    })
   },
   watch: {},
 };
@@ -87,7 +98,7 @@ export default {
   display: block;
   width: unset;
 }
-.swiper {
+.swiper-wrapper {
   overflow: hidden;
 }
 /* .product-listing {

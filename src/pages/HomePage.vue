@@ -2,13 +2,33 @@
   <main>
     <section class="container">
       <h2>Página home da loja</h2>
-      <ProductSearch/>
+
+      <div class="row">
+        <h3>Nossas calças</h3>
+
+        <ProductSearch
+          :search_type="'category'"
+          :search_id="6"
+          name="calças"
+        />
+      </div>
+
+      <div class="row">
+        <h3>Nossas camisetas</h3>
+
+        <ProductSearch
+          :search_type="'category'"
+          :search_id="7"
+          name="camisetas"
+        />
+      </div>
     </section>
   </main>
 </template>
 
 <script>
 import ProductSearch from "@/components/ProductSearch.vue";
+
 
 export default {
   name: "HomePage",
@@ -20,6 +40,10 @@ export default {
       produtos: [],
       foo: 'bar'
     }
+  },
+  mounted(){
+
+    //console.log(swiper)
   }
 };
 </script>
