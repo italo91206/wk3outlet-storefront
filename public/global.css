@@ -147,3 +147,7 @@ a:focus {
 a button {
   cursor: pointer;
 }
+
+.block {
+  display: block;
+}
