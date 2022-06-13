@@ -46,8 +46,7 @@ export default {
   data() {
     return {
       produtos: [],
-      loading: true,
-      swiper: null,
+      loading: true
     };
   },
   methods: {
@@ -75,16 +74,16 @@ export default {
       const class_id = `#swiper-container--${this.name}`
       new Swiper(class_id, {
         modules: [Navigation, Pagination],
-        slidesPerView: 5,
+        slidesPerView: 'auto',
         spaceBetween: 10,
-        loop: true,
         navigation: {
-          nextEl: '.swiper-navigation--prev',
-          prevEl: '.swiper-navigation--next'
+          nextEl: '.swiper-navigation--next',
+          prevEl: '.swiper-navigation--prev'
         },
         pagination: {
           el: '.swiper-pagination',
           type: 'bullets',
+          clickable: true
         },
       })
     })
@@ -98,8 +97,31 @@ export default {
   display: block;
   width: unset;
 }
+
 .swiper-wrapper {
   overflow: hidden;
+}
+
+.product-listing .swiper-wrapper{
+  overflow: unset;
+}
+
+.product-listing .swiper-pagination{
+  bottom: 0px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.product-listing .swiper-container {
+  padding-bottom: 20px;
+}
+
+.swiper-pagination-bullet-active {
+  background: #2c3e50;
+}
+
+.product-listing .swiper-pagination-bullet {
+  margin: 0 4px;
 }
 /* .product-listing {
   display: flex;
