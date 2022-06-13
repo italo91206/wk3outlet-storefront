@@ -1,29 +1,51 @@
 <template>
   <header id="wk-header">
     <section id="pre-header">
-      <div class="wk-container flex">
-        <div class="pre-header--item">
-          <span class="fas fa-credit-card"></span>
-          <p>Pague em até 12x sem juros</p>
-        </div>
+      <div id="pre-header--swiper" class="wk-container swiper-container">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide pre-header--item">
+            <span class="fas fa-credit-card"></span>
+            <p>Pague em até 12x sem juros</p>
+          </div>
 
-        <div class="pre-header--item">
-          <span class="fas fa-store"></span>
-          <p>Compre aqui e retire na loja</p>
-        </div>
+          <div class="swiper-slide pre-header--item">
+            <span class="fas fa-store"></span>
+            <p>Compre aqui e retire na loja</p>
+          </div>
 
-        <div class="pre-header--item">
-          <span class="fas fa-truck"></span>
-          <p>Entrega para todo o Brasil</p>
+          <div class="swiper-slide pre-header--item">
+            <span class="fas fa-truck"></span>
+            <p>Entrega para todo o Brasil</p>
+          </div>
         </div>
       </div>
     </section>
 
     <div class="wk-container wk-container--principal flex">
       <div id="wk-header--image">
-        <router-link to="/">
-          <img src="/logo-extenso-invertido.png" alt="" />
+        <router-link to="/" class="mobile">
+          <div class="fas fa-bars"></div>
         </router-link>
+
+        <router-link id="mobile-title" to="/" class="block">
+          <img src="/logo-extenso-invertido.png" alt="" class="desktop" />
+
+          <h2 class="mobile">WK3 Outlet</h2>
+        </router-link>
+
+        <div class="wk-header--image--group mobile">
+          <router-link to="/minha-conta">
+            <div
+              class="fa-user"
+              :class="{ far: isLogado == false, fas: isLogado }"
+            ></div>
+          </router-link>
+
+          <span
+            class="fas fa-shopping-cart"
+            @click="carrinhoToggled = !carrinhoToggled"
+          ></span>
+        </div>
       </div>
 
       <div id="wk-header--search">
@@ -33,9 +55,12 @@
         </form>
       </div>
 
-      <div id="wk-header--options">
+      <div id="wk-header--options" class="desktop">
         <router-link to="/minha-conta">
-          <span class="fa-user" :class="{'far': isLogado == false, 'fas': isLogado}"></span>
+          <span
+            class="fa-user"
+            :class="{ far: isLogado == false, fas: isLogado }"
+          ></span>
           <span v-if="isLogado">Olá, {{ getNomePerfil }}</span>
           <span v-else>Olá visitante</span>
         </router-link>
@@ -47,15 +72,15 @@
       </div>
     </div>
 
-    <div class="wk-container-menu flex">
-        <ul class="items-menu menu-container flex">
-          <li><router-link to="/">Camisetas</router-link></li>
-          <li><router-link to="/">Calças</router-link></li>
-          <li><router-link to="/">Tênis</router-link></li>
-          <li><router-link to="/">Acessórios</router-link></li>
-          <li><router-link to="/">Destaques</router-link></li>
-          <li><router-link to="/">Promoções</router-link></li>
-        </ul>
+    <div class="wk-container-menu flex desktop">
+      <ul class="items-menu menu-container flex">
+        <li><router-link to="/">Camisetas</router-link></li>
+        <li><router-link to="/">Calças</router-link></li>
+        <li><router-link to="/">Tênis</router-link></li>
+        <li><router-link to="/">Acessórios</router-link></li>
+        <li><router-link to="/">Destaques</router-link></li>
+        <li><router-link to="/">Promoções</router-link></li>
+      </ul>
     </div>
 
     <Carrinho
@@ -67,6 +92,7 @@
 
 <script>
 import Carrinho from "@/components/Carrinho";
+import Swiper, { Autoplay } from "swiper";
 
 export default {
   name: "HeaderComponent",
@@ -91,6 +117,22 @@ export default {
     },
   },
   methods: {},
+  mounted() {
+    let width = window.innerWidth;
+
+    if (width <= 768) {
+      new Swiper("#pre-header--swiper", {
+        modules: [Autoplay],
+        slidesPerView: 1,
+        spaceBetween: 10,
+        centeredSlides: true,
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false,
+        },
+      });
+    }
+  },
 };
 </script>
 
@@ -185,8 +227,78 @@ export default {
   margin-right: 10px;
 }
 
-.menu-container{
+.menu-container {
   max-width: 960px;
   justify-content: space-between;
+}
+
+.pre-header--item.swiper-slide {
+  width: unset;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+#pre-header--swiper .swiper-wrapper {
+  overflow: unset;
+}
+
+#mobile-title {
+  text-transform: uppercase;
+  font-weight: bolder;
+  color: #3e3e3e;
+}
+
+#wk-header--search input {
+  border: unset;
+  border-bottom: solid 1px #bdbdbd;
+  margin-bottom: 10px;
+  padding: unset;
+  width: -webkit-fill-available;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 30px;
+}
+
+@media (min-width: 1024px) {
+  #pre-header--swiper .swiper-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 992px) {
+  #wk-header--image {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 425px) {
+  #wk-header--search {
+    width: 100%;
+    padding: 0 15px;
+  }
+
+  .search-bar .fas {
+    color: #bdbdbd;
+  }
+
+  .wk-container--principal {
+    padding: unset;
+  }
+
+  .wk-header--image--group > span {
+    margin-left: 20px;
+  }
+
+  #pre-header--swiper .swiper-slide {
+    font-size: 12px;
+  }
 }
 </style>
