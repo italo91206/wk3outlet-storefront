@@ -56,4 +56,39 @@ export default {
   max-width: 50%;
   margin: 20% auto;
 }
+
+.mobile{
+  display: none;
+}
+
+@media(max-width: 1024px){
+  .wk-container{
+    max-width: 1000px;
+    width: 100%;
+  }
+}
+
+@media(max-width: 992px){
+  .desktop{
+    display: none;
+  }
+
+  .mobile{
+    display: inherit
+  }
+
+  .wk-container, .container{
+    max-width: unset;
+  }
+}
+
+@media(max-width: 425px){
+  .row {
+    padding: 0 15px;
+  }
+
+  .col-4 {
+    flex: 0 0 100%;
+  }
+}
 </style>

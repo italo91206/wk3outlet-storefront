@@ -40,7 +40,7 @@
           </div>
 
           <div class="form-group">
-            <p><a>Esqueci minha senha</a></p>
+            <p class="disabled"><a>Esqueci minha senha</a></p>
             <p><a @click="isLogin = false">Não tenho conta</a></p>
           </div>
         </form>
@@ -81,7 +81,7 @@
             />
           </div>
 
-          <div class="form-group form-group--radio">
+          <!-- <div class="form-group form-group--radio">
             <input
               type="radio"
               id="tipo_pessoa_pf"
@@ -99,17 +99,17 @@
               v-model="tipo_pessoa"
             />
             <label for="">Pessoa jurídica</label>
-          </div>
+          </div> -->
 
           <div v-if="tipo_pessoa == 'pf'">
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label for="">RG</label>
               <input
                 type="text"
                 placeholder="Seu rg"
                 v-model="perfilToPost.rg"
               />
-            </div>
+            </div> -->
 
             <div class="form-group">
               <label for="">CPF</label>
@@ -172,7 +172,9 @@
           </div>
 
           <div class="form-group">
-            <button @click="cadastrar">Cadastrar</button>
+            <button class="wk-button wk-button--grey w100">
+              Cadastrar
+            </button>
           </div>
 
           <div class="form-group">
@@ -255,6 +257,10 @@ export default {
 </script>
 
 <style>
+.wk-button--grey{
+  background-color: #2c3e50;
+}
+
 .password-form-group > .relative {
   display: inline-block;
   width: 100%;
@@ -279,7 +285,7 @@ export default {
 }
 
 .form-group input {
-  width: 100%;
+  width: -webkit-fill-available;
   margin-top: 2px;
   padding: 5px 10px;
 }
@@ -292,5 +298,11 @@ export default {
   width: unset;
   margin-right: 15px;
   margin-left: unset;
+}
+
+@media(max-width: 425px){
+  #entrar-page .entrar-page--login {
+    padding: unset;
+  }
 }
 </style>

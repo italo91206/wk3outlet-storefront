@@ -116,10 +116,6 @@ export default {
 </script>
 
 <style lang="css">
-.footer-section--item h4 {
-  text-align: left;
-}
-
 .footer-section {
   background: #2c3e50;
   color: #fff;
@@ -132,13 +128,7 @@ export default {
   justify-content: space-between;
 }
 
-.footer-list {
-  margin-block: unset;
-  padding-inline: unset;
-  margin-inline: unset;
-  text-align: left;
-  list-style-type: none;
-}
+
 
 .footer-list li {
   margin-bottom: 15px;
@@ -175,5 +165,39 @@ export default {
   color: white;
   text-align: center;
   margin: 0 auto;
+}
+
+@media(min-width: 992px){
+  .footer-list {
+    margin-block: unset;
+    padding-inline: unset;
+    margin-inline: unset;
+    text-align: left;
+    list-style-type: none;
+  }
+
+  .footer-section--item h4 {
+    text-align: left;
+  }
+}
+
+@media(max-width: 425px){
+  .footer-section--item {
+    width: 50%;
+    text-align: center;
+    justify-content: center;
+    display: block;
+  }
+
+  .footer-section div .footer-section--item:last-child{
+    width: 100%;
+  }
+
+  .footer-list {
+    margin-block: unset;
+    padding-inline: unset;
+    margin-inline: unset;
+    list-style-type: none;
+  }
 }
 </style>
