@@ -43,7 +43,7 @@
 
           <span
             class="fas fa-shopping-cart"
-            @click="carrinhoToggled = !carrinhoToggled"
+            @click="toggleCart"
           ></span>
         </div>
       </div>
@@ -67,7 +67,7 @@
 
         <span
           class="fas fa-shopping-cart"
-          @click="carrinhoToggled = !carrinhoToggled"
+          @click="toggleCart"
         ></span>
       </div>
     </div>
@@ -85,7 +85,7 @@
 
     <Carrinho
       :toggled="carrinhoToggled"
-      v-on:cart-close="carrinhoToggled = false"
+      v-on:cart-close="toggleCart"
     />
   </header>
 </template>
@@ -100,9 +100,7 @@ export default {
     Carrinho,
   },
   data() {
-    return {
-      carrinhoToggled: false,
-    };
+    return {};
   },
   computed: {
     getNomePerfil() {
@@ -115,8 +113,15 @@ export default {
       // console.log("perfil", perfil )
       return perfil.nome == null ? false : true;
     },
+    carrinhoToggled(){
+      return this.$store.getters["carrinho/getCartShow"]
+    }
   },
-  methods: {},
+  methods: {
+    toggleCart(){
+      this.$store.commit('carrinho/toggleCart')
+    }
+  },
   mounted() {
     let width = window.innerWidth;
 

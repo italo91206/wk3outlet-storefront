@@ -168,4 +168,10 @@ export default {
     left: -5px;
     transform: rotate(45deg);
 }
+
+@media(max-width: 425px){
+  #variation-options > .row {
+    padding: unset;
+  }
+}
 </style>
