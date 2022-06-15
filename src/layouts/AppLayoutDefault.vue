@@ -90,5 +90,9 @@ export default {
   .col-4 {
     flex: 0 0 100%;
   }
+
+  .col-6{
+    flex: 0 0 100%;
+  }
 }
 </style>
