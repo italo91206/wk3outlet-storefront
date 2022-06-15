@@ -25,25 +25,23 @@
       <div class="row flex">
         <div id="product-images-column" class="col-6">
           <div class="row flex">
-            <div id="product-image-thumbs" class="swiper">
+            <div id="product-image-thumbs" class="swiper-container">
               <div class="swiper-wrapper">
-                <template v-if="produto.imagens.length">
-                  <div
-                    class="swiper-slide"
-                    v-for="(imagem, i) in produto.imagens"
-                    :key="i"
-                  >
-                    <img :src="base_url + imagem.url" alt="" class="w100" />
-                  </div>
-                </template>
+                <div
+                  class="swiper-slide"
+                  v-for="(imagem, i) in produto.imagens"
+                  :key="i"
+                >
+                  <img :src="base_url + imagem.url" alt="" class="w100" />
+                </div>
 
-                <template v-else>
+                <div v-if="produto.imagens.length == 0" class="swiper-slide">
                   <img :src="fallback_url" alt="" class="w100" />
-                </template>
+                </div>
               </div>
             </div>
 
-            <div id="product-image-gallery" class="swiper">
+            <div id="product-image-gallery" class="swiper-container">
               <div class="swiper-wrapper">
                 <div
                   class="swiper-slide"
@@ -100,19 +98,23 @@
 
     <section id="product-description" class="row text-left" v-if="loading == false">
       <div class="container">
-        <h3>Descrição</h3>
-        <p>
-          {{ produto.descricao || '' }}
-        </p>
+        <div class="row">
+          <h3>Descrição</h3>
+          <p>
+            {{ produto.descricao || '' }}
+          </p>
+        </div>
       </div>
     </section>
 
     <section id="related-products" class="container" v-if="loading == false">
-      <h3>Ver mais em {{ produto.nome_categoria }}</h3>
-      <ProductSearch
-        :search_type="'category'"
-        :search_id="produto.categoria_id"
-      />
+      <div class="row">
+        <h3>Ver mais em {{ produto.nome_categoria }}</h3>
+        <ProductSearch
+          :search_type="'category'"
+          :search_id="produto.categoria_id"
+        />
+      </div>
     </section>
   </main>
 </template>
@@ -122,6 +124,7 @@ import service from "@/services/catalogo-service.js";
 import ProdutoVariation from "@/components/ProdutoVariation.vue";
 import ProductNewsLetter from "@/components/ProductNewsLetter.vue";
 import ProductSearch from "@/components/ProductSearch.vue";
+import Swiper, { Thumbs } from 'swiper';
 
 export default {
   name: "ProductPage",
@@ -169,6 +172,7 @@ export default {
           delete product_to_add.variacoes;
           product_to_add.variacao = this.selecionarVariacao(activeSku);
           this.$store.dispatch("carrinho/adicionarProduto", { product_to_add });
+          this.$store.commit("carrinho/setCartShow", true)
         }
       } else {
         this.variacaoSelecionada = this.produto;
@@ -211,40 +215,23 @@ export default {
     },
   },
   mounted() {
-    const url = this.$route.params.url;
-    this.recuperarProduto(url);
-    let script = document.createElement("script");
-    script.setAttribute(
-      "src",
-      "https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.1.0/swiper-bundle.min.js"
-    );
-    script.setAttribute("crossorigin", "anonymous");
-    script.setAttribute("referrerpolicy", "no-referrer");
-    script.setAttribute(
-      "integrity",
-      "sha512-uz9KhDW9ZdiJU79RDPNuHE4Z9aUOYTVargiMzYbe8Z3j5vBHxBMmlvGw1Xa09CmV6tCUOhGazG4pTWsuDJd1xw=="
-    );
-    script.onload = () => {
-      // eslint-disable-next-line
-      let galleryThumbs = new Swiper("#product-image-thumbs", {
+    this.recuperarProduto(this.$route.params.url)
+    .then(() => {
+      const galleryThumbs = new Swiper("#product-image-thumbs", {
         direction: "vertical",
         slidesPerView: "auto",
         spaceBetween: 10,
-        freeMode: true,
-        watchSlidesVisibility: true,
-        watchSlidesProgress: true,
-      });
+      })
 
-      // eslint-disable-next-line
-      let gallery = new Swiper("#product-image-gallery", {
+      new Swiper("#product-image-gallery", {
+        modules: [ Thumbs ],
         slidesPerView: "auto",
         thumbs: {
           swiper: galleryThumbs,
           slideThumbActiveClass: "thumb-active",
         },
-      });
-    };
-    document.body.appendChild(script);
+      })
+    })
   },
   watch: {
     activeSku() {
@@ -274,10 +261,6 @@ export default {
 #product-page p {
   text-align: left;
 } */
-
-#product-breadcrumbs {
-  padding: 12px 0;
-}
 
 .breadcrumb-li .fas {
   margin: 0 8px;
@@ -339,22 +322,42 @@ p#product-sku {
   opacity: 0.4;
 }
 
-#product-image-gallery {
-  width: 500px;
-}
-
 #product-image-thumbs .swiper-slide {
   height: 50px;
   width: 50px;
 }
 
-#product-image-gallery .swiper-slide {
+/* #product-image-gallery .swiper-slide {
   width: 500px;
-}
+} */
 
 #product-description {
   background: #d9d9d9;
   padding: 50px 0;
   margin: 50px 0;
+}
+
+#product-image-gallery .swiper-wrapper{
+  overflow: unset;
+}
+
+#product-image-thumbs {
+  margin-left: 0;
+}
+
+@media (min-width: 992px) {
+  #product-image-gallery{
+    width: 500px;
+  }
+
+  #product-breadcrumbs {
+    padding: 12px 0;
+  }
+}
+
+@media (max-width: 425px){
+  #product-breadcrumbs--ul {
+    padding: 15px 0;
+  }
 }
 </style>
