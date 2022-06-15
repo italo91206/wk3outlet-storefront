@@ -84,7 +84,7 @@ export default {
     return {
       fallback_url:
         "https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png",
-      base_url: "http://wk3outlet.italoferreira.dev.br/static/",
+      base_url: "http://wk3outlet.com.br/static/",
       produtos: [],
     };
   },
