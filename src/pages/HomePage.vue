@@ -4,16 +4,14 @@
       <h2>Página home da loja</h2>
 
       <div class="row">
-        <h3>Nossas calças</h3>
+        <h3>Nossos produtos</h3>
 
         <ProductSearch
-          :search_type="'category'"
-          :search_id="6"
-          name="calças"
+          name="produtos"
         />
       </div>
 
-      <div class="row">
+      <!-- <div class="row">
         <h3>Nossas camisetas</h3>
 
         <ProductSearch
@@ -21,7 +19,7 @@
           :search_id="7"
           name="camisetas"
         />
-      </div>
+      </div> -->
     </section>
   </main>
 </template>
