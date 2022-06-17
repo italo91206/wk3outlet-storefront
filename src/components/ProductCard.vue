@@ -1,14 +1,20 @@
 <template>
   <article class="product-card">
-    <img :src="getImage" alt="" class="w100"/>
+    <div class="product-card--image">
+      <img :src="getImage" alt="" class="w100"/>
+    </div>
 
-    <p class="product-card--name">
-      {{ produto.nome_produto }}
-    </p>
+    <div class="product-card--name">
+      <p class="product-card--name-text">
+        {{ produto.nome_produto }}
+      </p>
+    </div>
 
-    <p class="product-card--price">
-      {{ produto.preco | preco}}
-    </p>
+    <div class="product-card--price">
+      <p class="product-card--price-text">
+        {{ produto.preco | preco}}
+      </p>
+    </div>
   </article>
 </template>
 
@@ -50,4 +56,10 @@ export default {
 .product-card p{
   margin: unset;
 }
+
+/* .product-card--image {
+  content: ' ';
+  display: block;
+  background-image: url(https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png);
+} */
 </style>
